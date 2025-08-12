@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.InMemory;
 using TodoApi.Data;
 
 namespace TodoApi
@@ -16,7 +17,7 @@ namespace TodoApi
 
             // Add services to the container.
             builder.Services.AddDbContext<TodoContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("TodoContext")));
+                options.UseInMemoryDatabase("TodoList"));
 
             builder.Services.AddControllers();
 
