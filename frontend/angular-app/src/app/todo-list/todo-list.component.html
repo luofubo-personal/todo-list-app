@@ -1,0 +1,21 @@
+<form (ngSubmit)="addTodo()" #todoForm="ngForm">
+  <div class="input-group">
+    <input type="text" [(ngModel)]="newTodoText" name="newTodoText" placeholder="Add a new todo..." required>
+    <button type="submit" [disabled]="!todoForm.form.valid">Add</button>
+  </div>
+</form>
+
+<div id="todo-stats">
+  <span id="todo-count">{{ todos.filter(todo => !todo.completed).length }}</span> items left
+</div>
+
+<div id="todo-list-container">
+  <ul id="todo-list">
+    <app-todo-item 
+      *ngFor="let todo of todos" 
+      [todo]="todo" 
+      (toggle)="toggleComplete(todo)"
+      (delete)="deleteTodo(todo)">
+    </app-todo-item>
+  </ul>
+</div>

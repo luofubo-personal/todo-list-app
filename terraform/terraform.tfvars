@@ -1,0 +1,8 @@
+resource_group_name   = "todo-app-rg"
+location              = "East US"
+app_service_plan_name = "todo-app-plan"
+app_service_name      = "todo-app-service"
+sql_server_name       = "todo-sql-server"
+sql_database_name     = "todo-db"
+sql_admin_username    = "todoadmin"
+sql_admin_password    = "TodoPassword123!"
