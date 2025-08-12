@@ -22,6 +22,10 @@ export class TodoListComponent implements OnInit {
       .subscribe(todos => this.todos = todos);
   }
 
+  get incompleteTodosCount(): number {
+    return this.todos.filter(todo => !todo.completed).length;
+  }
+
   addTodo(): void {
     if (this.newTodoText.trim()) {
       const newTodo: Todo = {
