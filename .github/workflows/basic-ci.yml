@@ -99,7 +99,7 @@ jobs:
         
     - name: Install dependencies
       working-directory: ./frontend/angular-app
-      run: npm ci
+      run: npm ci --legacy-peer-deps
       
     - name: Lint frontend
       working-directory: ./frontend/angular-app

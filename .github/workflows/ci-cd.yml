@@ -131,7 +131,7 @@ jobs:
         
     - name: Install dependencies
       working-directory: ${{ env.ANGULAR_APP_PATH }}
-      run: npm ci
+      run: npm ci --legacy-peer-deps
       
     - name: Lint frontend
       working-directory: ${{ env.ANGULAR_APP_PATH }}

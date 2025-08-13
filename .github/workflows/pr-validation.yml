@@ -53,7 +53,7 @@ jobs:
         
     - name: Install frontend dependencies
       working-directory: ./frontend/angular-app
-      run: npm ci
+      run: npm ci --legacy-peer-deps
       
     - name: Run Angular linting
       working-directory: ./frontend/angular-app
@@ -125,7 +125,7 @@ jobs:
           
     - name: Install Angular dependencies
       working-directory: ./frontend/angular-app
-      run: npm ci
+      run: npm ci --legacy-peer-deps
       
     - name: Run Angular tests
       working-directory: ./frontend/angular-app
@@ -190,7 +190,7 @@ jobs:
         
     - name: Install frontend dependencies
       working-directory: ./frontend/angular-app
-      run: npm ci
+      run: npm ci --legacy-peer-deps
       
     - name: Build frontend
       working-directory: ./frontend/angular-app
