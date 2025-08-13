@@ -63,7 +63,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: backend-test-results
+        name: backend-test-results-${{ github.run_id }}
         path: ./TestResults
         retention-days: 30
         
@@ -77,7 +77,7 @@ jobs:
     - name: Upload backend artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: backend-artifacts
+        name: backend-artifacts-${{ github.run_id }}
         path: ./publish/backend
         retention-days: 30
 
@@ -118,7 +118,7 @@ jobs:
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: frontend-test-results
+        name: frontend-test-results-${{ github.run_id }}
         path: |
           ./frontend/angular-app/test-results
           ./frontend/angular-app/coverage
@@ -131,7 +131,7 @@ jobs:
     - name: Upload frontend artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: frontend-artifacts
+        name: frontend-artifacts-${{ github.run_id }}
         path: ./frontend/angular-app/dist
         retention-days: 30
 
