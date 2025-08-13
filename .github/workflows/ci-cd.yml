@@ -52,20 +52,39 @@ jobs:
           --configuration Release \
           --verbosity normal \
           --collect:"XPlat Code Coverage" \
-          --results-directory ./coverage
-          
+          --logger trx \
+          --results-directory ./TestResults
+
+    - name: List test results (debug)
+      if: always()
+      run: |
+        echo "Contents of TestResults directory:"
+        ls -la ./TestResults/ || echo "TestResults directory not found"
+        find . -name "*.trx" -type f || echo "No .trx files found"
+        find . -name "*.xml" -type f || echo "No .xml files found"
+
+    - name: Upload backend test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: backend-test-results
+        path: |
+          ./TestResults
+        retention-days: 30
+
     - name: Generate test report
       uses: dorny/test-reporter@v1
-      if: success() || failure()
+      if: always()
       with:
         name: Backend Tests
-        path: '**/TestResults.xml'
+        path: './TestResults/*.trx'
         reporter: dotnet-trx
+        fail-on-error: false
         
     - name: Upload coverage reports
       uses: codecov/codecov-action@v4
       with:
-        directory: ./coverage
+        directory: ./TestResults
         flags: backend
         name: backend-coverage
         
@@ -113,8 +132,38 @@ jobs:
         npm run test -- \
           --watch=false \
           --browsers=ChromeHeadless \
-          --code-coverage
-          
+          --code-coverage \
+          --reporters=progress,junit
+
+    - name: List frontend test results (debug)
+      if: always()
+      working-directory: ${{ env.ANGULAR_APP_PATH }}
+      run: |
+        echo "Contents of test-results directory:"
+        ls -la ./test-results/ || echo "test-results directory not found"
+        echo "Contents of coverage directory:"
+        ls -la ./coverage/ || echo "coverage directory not found"
+        find . -name "*.xml" -type f || echo "No .xml files found"
+
+    - name: Upload frontend test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: frontend-test-results
+        path: |
+          ${{ env.ANGULAR_APP_PATH }}/test-results
+          ${{ env.ANGULAR_APP_PATH }}/coverage
+        retention-days: 30
+
+    - name: Generate frontend test report
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Frontend Tests
+        path: '${{ env.ANGULAR_APP_PATH }}/test-results/*.xml'
+        reporter: java-junit
+        fail-on-error: false
+
     - name: Upload frontend coverage
       uses: codecov/codecov-action@v4
       with:

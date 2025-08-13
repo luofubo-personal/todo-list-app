@@ -106,6 +106,13 @@ jobs:
           --collect:"XPlat Code Coverage" \
           --logger trx \
           --results-directory ./TestResults
+
+    - name: List .NET test results (debug)
+      if: always()
+      run: |
+        echo "Contents of TestResults directory:"
+        ls -la ./TestResults/ || echo "TestResults directory not found"
+        find . -name "*.trx" -type f || echo "No .trx files found"
           
     - name: Install Angular dependencies
       working-directory: ./frontend/angular-app
@@ -117,7 +124,8 @@ jobs:
         npm run test -- \
           --watch=false \
           --browsers=ChromeHeadless \
-          --code-coverage
+          --code-coverage \
+          --reporters=progress,junit
           
     - name: Upload test results
       uses: actions/upload-artifact@v4

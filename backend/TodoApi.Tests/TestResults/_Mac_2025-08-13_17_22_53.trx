@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="89d2dbd8-3fc4-4a55-b2d2-a98164b96163" name="@Mac 2025-08-13 17:22:53" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2025-08-13T17:22:53.8093070+12:00" queuing="2025-08-13T17:22:53.8093070+12:00" start="2025-08-13T17:22:53.3057160+12:00" finish="2025-08-13T17:22:53.8114250+12:00" />
+  <TestSettings name="default" id="c16b776a-d279-47e6-a5d5-0633f674134b">
+    <Deployment runDeploymentRoot="_Mac_2025-08-13_17_22_53" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="5fd9a080-4c3b-486e-8d5a-052067fb4c02" testId="d2f576f0-9ad2-8853-b08b-8c9fd1f6b248" testName="TodoApi.Tests.Tests.TodosControllerTests.DeleteTodo_ReturnsBadRequest_WhenIdIsInvalid" computerName="Mac" duration="00:00:00.0006413" startTime="2025-08-13T17:22:53.7436110+12:00" endTime="2025-08-13T17:22:53.7439960+12:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5fd9a080-4c3b-486e-8d5a-052067fb4c02" />
+    <UnitTestResult executionId="fdb34df2-42a3-41fc-90f4-050fac8bbb79" testId="b7f7aab5-4811-433d-9ee4-ea3287814151" testName="TodoApi.Tests.Tests.TodosControllerTests.PutTodo_ReturnsBadRequest_WhenIdMismatch" computerName="Mac" duration="00:00:00.0736158" startTime="2025-08-13T17:22:53.6443940+12:00" endTime="2025-08-13T17:22:53.7210740+12:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="fdb34df2-42a3-41fc-90f4-050fac8bbb79" />
+    <UnitTestResult executionId="188e6279-bd21-45e4-8d8d-95c34f8127c9" testId="5c41536e-fa86-9089-145e-122aac4b7af3" testName="TodoApi.Tests.Tests.TodosControllerTests.GetTodo_ReturnsItem_WhenItemExists" computerName="Mac" duration="00:00:00.0008387" startTime="2025-08-13T17:22:53.7542920+12:00" endTime="2025-08-13T17:22:53.7550550+12:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="188e6279-bd21-45e4-8d8d-95c34f8127c9" />
+    <UnitTestResult executionId="da55844c-fdd0-43ca-9e28-1e530c503f87" testId="690c90de-2a42-5153-f02d-ff3651aba660" testName="TodoApi.Tests.Tests.TodosControllerTests.PostTodo_ReturnsCreatedAtAction" computerName="Mac" duration="00:00:00.0027472" startTime="2025-08-13T17:22:53.7446950+12:00" endTime="2025-08-13T17:22:53.7474080+12:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="da55844c-fdd0-43ca-9e28-1e530c503f87" />
+    <UnitTestResult executionId="41e0ffe6-ce9b-4efa-83c6-5665ff4f31cc" testId="00468b0c-c030-05d7-6272-d0c8b7605a33" testName="TodoApi.Tests.Tests.TodosControllerTests.PostTodo_ReturnsBadRequest_WhenTextIsEmpty" computerName="Mac" duration="00:00:00.0002848" startTime="2025-08-13T17:22:53.7551220+12:00" endTime="2025-08-13T17:22:53.7553510+12:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="41e0ffe6-ce9b-4efa-83c6-5665ff4f31cc" />
+    <UnitTestResult executionId="81193d6e-5cfe-401c-8c07-e90f17071bbd" testId="39ff99f9-a155-ad4f-afb0-abbfd4f128c8" testName="TodoApi.Tests.Tests.TodosControllerTests.GetTodos_ReturnsAllItems" computerName="Mac" duration="00:00:00.0067410" startTime="2025-08-13T17:22:53.7474670+12:00" endTime="2025-08-13T17:22:53.7541950+12:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="81193d6e-5cfe-401c-8c07-e90f17071bbd" />
+    <UnitTestResult executionId="d8882f4d-7173-4779-aaca-aa355da4abc4" testId="d49f78f6-3e1b-3bb2-3f71-bf85a30a201f" testName="TodoApi.Tests.Tests.TodosControllerTests.PostTodo_ReturnsBadRequest_WhenTextIsTooLong" computerName="Mac" duration="00:00:00.0006200" startTime="2025-08-13T17:22:53.7440670+12:00" endTime="2025-08-13T17:22:53.7446360+12:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d8882f4d-7173-4779-aaca-aa355da4abc4" />
+    <UnitTestResult executionId="54dd0471-6a7f-4937-8edc-75224fb86c17" testId="d6e84615-e3af-873b-c3da-914cfacd2f38" testName="TodoApi.Tests.Tests.TodosControllerTests.GetTodo_ReturnsNotFound_WhenItemDoesNotExist" computerName="Mac" duration="00:00:00.0221623" startTime="2025-08-13T17:22:53.7258550+12:00" endTime="2025-08-13T17:22:53.7433350+12:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="54dd0471-6a7f-4937-8edc-75224fb86c17" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="TodoApi.Tests.Tests.TodosControllerTests.PostTodo_ReturnsBadRequest_WhenTextIsTooLong" storage="/users/bo/documents/todo-list-app/backend/todoapi.tests/bin/debug/net9.0/todoapi.tests.dll" id="d49f78f6-3e1b-3bb2-3f71-bf85a30a201f">
+      <Execution id="d8882f4d-7173-4779-aaca-aa355da4abc4" />
+      <TestMethod codeBase="/Users/bo/Documents/todo-list-app/backend/TodoApi.Tests/bin/Debug/net9.0/TodoApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="TodoApi.Tests.Tests.TodosControllerTests" name="PostTodo_ReturnsBadRequest_WhenTextIsTooLong" />
+    </UnitTest>
+    <UnitTest name="TodoApi.Tests.Tests.TodosControllerTests.DeleteTodo_ReturnsBadRequest_WhenIdIsInvalid" storage="/users/bo/documents/todo-list-app/backend/todoapi.tests/bin/debug/net9.0/todoapi.tests.dll" id="d2f576f0-9ad2-8853-b08b-8c9fd1f6b248">
+      <Execution id="5fd9a080-4c3b-486e-8d5a-052067fb4c02" />
+      <TestMethod codeBase="/Users/bo/Documents/todo-list-app/backend/TodoApi.Tests/bin/Debug/net9.0/TodoApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="TodoApi.Tests.Tests.TodosControllerTests" name="DeleteTodo_ReturnsBadRequest_WhenIdIsInvalid" />
+    </UnitTest>
+    <UnitTest name="TodoApi.Tests.Tests.TodosControllerTests.PostTodo_ReturnsBadRequest_WhenTextIsEmpty" storage="/users/bo/documents/todo-list-app/backend/todoapi.tests/bin/debug/net9.0/todoapi.tests.dll" id="00468b0c-c030-05d7-6272-d0c8b7605a33">
+      <Execution id="41e0ffe6-ce9b-4efa-83c6-5665ff4f31cc" />
+      <TestMethod codeBase="/Users/bo/Documents/todo-list-app/backend/TodoApi.Tests/bin/Debug/net9.0/TodoApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="TodoApi.Tests.Tests.TodosControllerTests" name="PostTodo_ReturnsBadRequest_WhenTextIsEmpty" />
+    </UnitTest>
+    <UnitTest name="TodoApi.Tests.Tests.TodosControllerTests.GetTodo_ReturnsItem_WhenItemExists" storage="/users/bo/documents/todo-list-app/backend/todoapi.tests/bin/debug/net9.0/todoapi.tests.dll" id="5c41536e-fa86-9089-145e-122aac4b7af3">
+      <Execution id="188e6279-bd21-45e4-8d8d-95c34f8127c9" />
+      <TestMethod codeBase="/Users/bo/Documents/todo-list-app/backend/TodoApi.Tests/bin/Debug/net9.0/TodoApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="TodoApi.Tests.Tests.TodosControllerTests" name="GetTodo_ReturnsItem_WhenItemExists" />
+    </UnitTest>
+    <UnitTest name="TodoApi.Tests.Tests.TodosControllerTests.PutTodo_ReturnsBadRequest_WhenIdMismatch" storage="/users/bo/documents/todo-list-app/backend/todoapi.tests/bin/debug/net9.0/todoapi.tests.dll" id="b7f7aab5-4811-433d-9ee4-ea3287814151">
+      <Execution id="fdb34df2-42a3-41fc-90f4-050fac8bbb79" />
+      <TestMethod codeBase="/Users/bo/Documents/todo-list-app/backend/TodoApi.Tests/bin/Debug/net9.0/TodoApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="TodoApi.Tests.Tests.TodosControllerTests" name="PutTodo_ReturnsBadRequest_WhenIdMismatch" />
+    </UnitTest>
+    <UnitTest name="TodoApi.Tests.Tests.TodosControllerTests.GetTodo_ReturnsNotFound_WhenItemDoesNotExist" storage="/users/bo/documents/todo-list-app/backend/todoapi.tests/bin/debug/net9.0/todoapi.tests.dll" id="d6e84615-e3af-873b-c3da-914cfacd2f38">
+      <Execution id="54dd0471-6a7f-4937-8edc-75224fb86c17" />
+      <TestMethod codeBase="/Users/bo/Documents/todo-list-app/backend/TodoApi.Tests/bin/Debug/net9.0/TodoApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="TodoApi.Tests.Tests.TodosControllerTests" name="GetTodo_ReturnsNotFound_WhenItemDoesNotExist" />
+    </UnitTest>
+    <UnitTest name="TodoApi.Tests.Tests.TodosControllerTests.GetTodos_ReturnsAllItems" storage="/users/bo/documents/todo-list-app/backend/todoapi.tests/bin/debug/net9.0/todoapi.tests.dll" id="39ff99f9-a155-ad4f-afb0-abbfd4f128c8">
+      <Execution id="81193d6e-5cfe-401c-8c07-e90f17071bbd" />
+      <TestMethod codeBase="/Users/bo/Documents/todo-list-app/backend/TodoApi.Tests/bin/Debug/net9.0/TodoApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="TodoApi.Tests.Tests.TodosControllerTests" name="GetTodos_ReturnsAllItems" />
+    </UnitTest>
+    <UnitTest name="TodoApi.Tests.Tests.TodosControllerTests.PostTodo_ReturnsCreatedAtAction" storage="/users/bo/documents/todo-list-app/backend/todoapi.tests/bin/debug/net9.0/todoapi.tests.dll" id="690c90de-2a42-5153-f02d-ff3651aba660">
+      <Execution id="da55844c-fdd0-43ca-9e28-1e530c503f87" />
+      <TestMethod codeBase="/Users/bo/Documents/todo-list-app/backend/TodoApi.Tests/bin/Debug/net9.0/TodoApi.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner3/netcore/" className="TodoApi.Tests.Tests.TodosControllerTests" name="PostTodo_ReturnsCreatedAtAction" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="d2f576f0-9ad2-8853-b08b-8c9fd1f6b248" executionId="5fd9a080-4c3b-486e-8d5a-052067fb4c02" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="b7f7aab5-4811-433d-9ee4-ea3287814151" executionId="fdb34df2-42a3-41fc-90f4-050fac8bbb79" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="5c41536e-fa86-9089-145e-122aac4b7af3" executionId="188e6279-bd21-45e4-8d8d-95c34f8127c9" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="690c90de-2a42-5153-f02d-ff3651aba660" executionId="da55844c-fdd0-43ca-9e28-1e530c503f87" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="00468b0c-c030-05d7-6272-d0c8b7605a33" executionId="41e0ffe6-ce9b-4efa-83c6-5665ff4f31cc" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="39ff99f9-a155-ad4f-afb0-abbfd4f128c8" executionId="81193d6e-5cfe-401c-8c07-e90f17071bbd" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d49f78f6-3e1b-3bb2-3f71-bf85a30a201f" executionId="d8882f4d-7173-4779-aaca-aa355da4abc4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="d6e84615-e3af-873b-c3da-914cfacd2f38" executionId="54dd0471-6a7f-4937-8edc-75224fb86c17" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Completed">
+    <Counters total="8" executed="8" passed="8" failed="0" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v3.1.3+b1b99bdeb3 (64-bit .NET 9.0.8)
+[xUnit.net 00:00:00.05]   Discovering: TodoApi.Tests
+[xUnit.net 00:00:00.06]   Discovered:  TodoApi.Tests
+[xUnit.net 00:00:00.07]   Starting:    TodoApi.Tests
+[xUnit.net 00:00:00.20]   Finished:    TodoApi.Tests
+</StdOut>
+    </Output>
+  </ResultSummary>
+</TestRun>

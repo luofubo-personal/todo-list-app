@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<testsuite name="Chrome Headless 139.0.0.0 (Mac OS 10.15.7)" package="todo-list-angular" timestamp="2025-08-13T05:22:37" id="0" hostname="Mac" tests="10" errors="0" failures="0" time="0.036">
+  <properties>
+    <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/139.0.0.0 Safari/537.36"/>
+  </properties>
+  <testcase name="TodoService should handle error when adding todo fails" time="0.006" classname=".TodoService"/>
+  <testcase name="TodoService should update a todo via PUT" time="0.001" classname=".TodoService"/>
+  <testcase name="TodoService should delete a todo via DELETE" time="0.001" classname=".TodoService"/>
+  <testcase name="TodoService should retrieve todos from the API via GET" time="0.001" classname=".TodoService"/>
+  <testcase name="TodoService should add a todo via POST" time="0.001" classname=".TodoService"/>
+  <testcase name="TodoService should be created" time="0.001" classname=".TodoService"/>
+  <testcase name="TodoService should handle error when updating todo fails" time="0.001" classname=".TodoService"/>
+  <testcase name="TodoService should handle error when deleting todo fails" time="0.001" classname=".TodoService"/>
+  <testcase name="TodoService should handle error when getting todos fails" time="0.001" classname=".TodoService"/>
+  <testcase name="TodoListComponent should create" time="0.022" classname=".TodoListComponent"/>
+  <system-out>
+    <![CDATA[Chrome Headless 139.0.0.0 (Mac OS 10.15.7) ERROR: 'addTodo failed:', HttpErrorResponse{headers: _HttpHeaders{headers: Map{}, normalizedNames: Map{}, lazyInit: undefined, lazyUpdate: null}, status: 400, statusText: 'Bad Request', url: 'http://localhost:5001/api/todos', ok: false, type: undefined, name: 'HttpErrorResponse', message: 'Http failure response for http://localhost:5001/api/todos: 400 Bad Request', error: 'Validation error'}
+,Chrome Headless 139.0.0.0 (Mac OS 10.15.7) WARN: 'User message: Validation error'
+,Chrome Headless 139.0.0.0 (Mac OS 10.15.7) ERROR: 'updateTodo failed:', HttpErrorResponse{headers: _HttpHeaders{headers: Map{}, normalizedNames: Map{}, lazyInit: undefined, lazyUpdate: null}, status: 404, statusText: 'Not Found', url: 'http://localhost:5001/api/todos/1', ok: false, type: undefined, name: 'HttpErrorResponse', message: 'Http failure response for http://localhost:5001/api/todos/1: 404 Not Found', error: 'Not found'}
+,Chrome Headless 139.0.0.0 (Mac OS 10.15.7) WARN: 'User message: Not found'
+,Chrome Headless 139.0.0.0 (Mac OS 10.15.7) ERROR: 'deleteTodo failed:', HttpErrorResponse{headers: _HttpHeaders{headers: Map{}, normalizedNames: Map{}, lazyInit: undefined, lazyUpdate: null}, status: 404, statusText: 'Not Found', url: 'http://localhost:5001/api/todos/1', ok: false, type: undefined, name: 'HttpErrorResponse', message: 'Http failure response for http://localhost:5001/api/todos/1: 404 Not Found', error: 'Not found'}
+,Chrome Headless 139.0.0.0 (Mac OS 10.15.7) WARN: 'User message: Not found'
+,Chrome Headless 139.0.0.0 (Mac OS 10.15.7) ERROR: 'getTodos failed:', HttpErrorResponse{headers: _HttpHeaders{headers: Map{}, normalizedNames: Map{}, lazyInit: undefined, lazyUpdate: null}, status: 500, statusText: 'Server Error', url: 'http://localhost:5001/api/todos', ok: false, type: undefined, name: 'HttpErrorResponse', message: 'Http failure response for http://localhost:5001/api/todos: 500 Server Error', error: 'Server error'}
+,Chrome Headless 139.0.0.0 (Mac OS 10.15.7) WARN: 'User message: Server error'
+
+]]>
+  </system-out>
+  <system-err/>
+</testsuite>
