@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -41,10 +41,10 @@ export class TodoService {
   }
 
   /** PUT: update the todo on the server */
-  updateTodo(todo: Todo): Observable<any> {
+  updateTodo(todo: Todo): Observable<Todo> {
     const url = `${this.todosUrl}/${todo.id}`;
-    return this.http.put(url, todo, this.httpOptions).pipe(
-      catchError(this.handleError<any>('updateTodo'))
+    return this.http.put<Todo>(url, todo, this.httpOptions).pipe(
+      catchError(this.handleError<Todo>('updateTodo'))
     );
   }
 
@@ -63,22 +63,28 @@ export class TodoService {
    * @param result - optional value to return as the observable result
    */
   private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
+    return (error: HttpErrorResponse | Error): Observable<T> => {
       // Log error details for debugging
       console.error(`${operation} failed:`, error);
 
       // Extract user-friendly error message
       let errorMessage = 'An unexpected error occurred';
 
-      if (error.error) {
-        if (typeof error.error === 'string') {
-          errorMessage = error.error;
-        } else if (error.error.message) {
-          errorMessage = error.error.message;
-        } else if (error.error.title) {
-          errorMessage = error.error.title;
+      if (error instanceof HttpErrorResponse) {
+        if (error.error) {
+          if (typeof error.error === 'string') {
+            errorMessage = error.error;
+          } else if (error.error.message) {
+            errorMessage = error.error.message;
+          } else if (error.error.title) {
+            errorMessage = error.error.title;
+          }
+        } else if (error.message) {
+          errorMessage = error.message;
+        } else if (error.statusText) {
+          errorMessage = error.statusText;
         }
-      } else if (error.message) {
+      } else if (error instanceof Error) {
         errorMessage = error.message;
       }
 

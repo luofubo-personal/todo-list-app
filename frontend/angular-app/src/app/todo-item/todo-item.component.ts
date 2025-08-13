@@ -10,13 +10,13 @@ import { Todo } from '../todo';
 export class TodoItemComponent {
   @Input() todo!: Todo;
   @Output() toggle = new EventEmitter<Todo>();
-  @Output() delete = new EventEmitter<Todo>();
+  @Output() deleteTodo = new EventEmitter<Todo>();
 
   onToggle(): void {
     this.toggle.emit(this.todo);
   }
 
   onDelete(): void {
-    this.delete.emit(this.todo);
+    this.deleteTodo.emit(this.todo);
   }
 }

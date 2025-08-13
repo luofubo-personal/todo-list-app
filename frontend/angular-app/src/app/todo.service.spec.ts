@@ -58,7 +58,7 @@ describe('TodoService', () => {
   it('should update a todo via PUT', () => {
     const updatedTodo: Todo = { id: 1, text: 'Updated Todo', completed: true, timestamp: new Date() };
 
-    service.updateTodo(updatedTodo).subscribe((response: any) => {
+    service.updateTodo(updatedTodo).subscribe((response: Todo | null) => {
       expect(response).toBeNull();
     });
 
@@ -70,8 +70,8 @@ describe('TodoService', () => {
   it('should delete a todo via DELETE', () => {
     const todoId = 1;
 
-    service.deleteTodo(todoId).subscribe((response: any) => {
-      expect(response).toBeNull();
+    service.deleteTodo(todoId).subscribe((response: Todo) => {
+      expect(response).toBeDefined();
     });
 
     const req = httpMock.expectOne(`${environment.apiUrl}/api/todos/1`);
@@ -105,7 +105,7 @@ describe('TodoService', () => {
   it('should handle error when updating todo fails', () => {
     const updatedTodo: Todo = { id: 1, text: 'Updated Todo', completed: true, timestamp: new Date() };
 
-    service.updateTodo(updatedTodo).subscribe((response: any) => {
+    service.updateTodo(updatedTodo).subscribe((response: Todo | null) => {
       expect(response).toBeUndefined();
     });
 
@@ -116,7 +116,7 @@ describe('TodoService', () => {
   it('should handle error when deleting todo fails', () => {
     const todoId = 1;
 
-    service.deleteTodo(todoId).subscribe((response: any) => {
+    service.deleteTodo(todoId).subscribe((response: Todo) => {
       expect(response).toBeUndefined();
     });
 

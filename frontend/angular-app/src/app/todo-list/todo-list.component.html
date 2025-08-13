@@ -11,11 +11,11 @@
 
 <div id="todo-list-container">
   <ul id="todo-list">
-    <app-todo-item 
-      *ngFor="let todo of todos" 
-      [todo]="todo" 
+    <app-todo-item
+      *ngFor="let todo of todos"
+      [todo]="todo"
       (toggle)="toggleComplete(todo)"
-      (delete)="deleteTodo(todo)">
+      (deleteTodo)="deleteTodo(todo)">
     </app-todo-item>
   </ul>
 </div>
