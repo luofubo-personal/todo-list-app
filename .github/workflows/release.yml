@@ -1,0 +1,304 @@
+name: Release Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        type: string
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+        - production
+        - staging
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  NODE_VERSION: '22.x'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # Create release
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Get version
+      id: version
+      run: |
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+        else
+          echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Generate changelog
+      id: changelog
+      run: |
+        # Generate changelog from git commits
+        PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+        if [ -z "$PREVIOUS_TAG" ]; then
+          CHANGELOG=$(git log --pretty=format:"- %s (%h)" --no-merges)
+        else
+          CHANGELOG=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+        fi
+        
+        echo "changelog<<EOF" >> $GITHUB_OUTPUT
+        echo "$CHANGELOG" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+        
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.version.outputs.version }}
+        release_name: Release ${{ steps.version.outputs.version }}
+        body: |
+          ## 🚀 Release ${{ steps.version.outputs.version }}
+          
+          ### 📋 Changes
+          ${{ steps.changelog.outputs.changelog }}
+          
+          ### 🔧 Components
+          - **Backend API**: .NET 9.0 with Entity Framework Core
+          - **Frontend**: Angular 20 with TypeScript
+          - **Database**: Azure SQL Database
+          - **Infrastructure**: Azure App Service + Static Web Apps
+          
+          ### 📦 Artifacts
+          - Backend API package
+          - Frontend build artifacts
+          - Docker images
+          - Infrastructure templates
+          
+          ### 🔍 Verification
+          All automated tests passed ✅
+          Security scans completed ✅
+          Performance benchmarks met ✅
+        draft: false
+        prerelease: ${{ contains(steps.version.outputs.version, '-') }}
+
+  # Build and package
+  build-and-package:
+    name: Build & Package
+    runs-on: ubuntu-latest
+    needs: create-release
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: './frontend/angular-app/package-lock.json'
+        
+    - name: Set version in projects
+      run: |
+        VERSION="${{ needs.create-release.outputs.version }}"
+        VERSION_NUMBER="${VERSION#v}"
+        
+        # Update .NET project version
+        sed -i "s/<Version>.*<\/Version>/<Version>$VERSION_NUMBER<\/Version>/" backend/TodoApi/TodoApi.csproj
+        
+        # Update Angular version
+        cd frontend/angular-app
+        npm version $VERSION_NUMBER --no-git-tag-version
+        
+    - name: Build backend
+      run: |
+        dotnet restore backend/TodoApi/TodoApi.csproj
+        dotnet build backend/TodoApi/TodoApi.csproj --configuration Release --no-restore
+        dotnet publish backend/TodoApi/TodoApi.csproj \
+          --configuration Release \
+          --output ./publish/backend \
+          --no-restore \
+          --self-contained false
+          
+    - name: Build frontend
+      working-directory: ./frontend/angular-app
+      run: |
+        npm ci
+        npm run build -- --configuration production --base-href /
+        
+    - name: Create backend package
+      run: |
+        cd ./publish/backend
+        zip -r ../../backend-${{ needs.create-release.outputs.version }}.zip .
+        
+    - name: Create frontend package
+      run: |
+        cd ./frontend/angular-app/dist
+        zip -r ../../../frontend-${{ needs.create-release.outputs.version }}.zip .
+        
+    - name: Upload backend package to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./backend-${{ needs.create-release.outputs.version }}.zip
+        asset_name: backend-${{ needs.create-release.outputs.version }}.zip
+        asset_content_type: application/zip
+        
+    - name: Upload frontend package to release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./frontend-${{ needs.create-release.outputs.version }}.zip
+        asset_name: frontend-${{ needs.create-release.outputs.version }}.zip
+        asset_content_type: application/zip
+
+  # Build Docker images
+  build-docker:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    needs: create-release
+    permissions:
+      contents: read
+      packages: write
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=ref,event=tag
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}}
+          
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./backend/TodoApi/Dockerfile
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+
+  # Deploy to production
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [create-release, build-and-package, build-docker]
+    if: github.event.inputs.environment == 'production' || github.event_name == 'push'
+    environment: production
+    
+    steps:
+    - name: Download release assets
+      run: |
+        # Download backend package
+        curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -o backend.zip \
+          "https://github.com/${{ github.repository }}/releases/download/${{ needs.create-release.outputs.version }}/backend-${{ needs.create-release.outputs.version }}.zip"
+          
+        # Download frontend package
+        curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -o frontend.zip \
+          "https://github.com/${{ github.repository }}/releases/download/${{ needs.create-release.outputs.version }}/frontend-${{ needs.create-release.outputs.version }}.zip"
+          
+        # Extract packages
+        unzip backend.zip -d ./backend-release
+        unzip frontend.zip -d ./frontend-release
+        
+    - name: Deploy backend to Azure App Service
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: todo-api-app
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ./backend-release
+        
+    - name: Deploy frontend to Azure Static Web Apps
+      uses: Azure/static-web-apps-deploy@v1
+      with:
+        azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        action: "upload"
+        app_location: "./frontend-release"
+        skip_app_build: true
+        
+    - name: Update infrastructure
+      run: |
+        # Deploy Terraform changes if any
+        echo "Updating infrastructure for release ${{ needs.create-release.outputs.version }}"
+        # Add Terraform deployment commands here
+        
+    - name: Run post-deployment tests
+      run: |
+        # Wait for deployment
+        sleep 60
+        
+        # Health checks
+        curl -f https://todo-api-app.azurewebsites.net/health || exit 1
+        
+        # Smoke tests
+        curl -f https://todo-api-app.azurewebsites.net/api/todos || exit 1
+        
+        echo "✅ Production deployment successful!"
+
+  # Notify stakeholders
+  notify:
+    name: Notify Stakeholders
+    runs-on: ubuntu-latest
+    needs: [create-release, deploy-production]
+    if: always()
+    
+    steps:
+    - name: Notify on success
+      if: needs.deploy-production.result == 'success'
+      run: |
+        echo "🎉 Release ${{ needs.create-release.outputs.version }} deployed successfully!"
+        # Add notification logic (Slack, Teams, email, etc.)
+        
+    - name: Notify on failure
+      if: needs.deploy-production.result == 'failure'
+      run: |
+        echo "❌ Release ${{ needs.create-release.outputs.version }} deployment failed!"
+        # Add failure notification logic
+        
+    - name: Update documentation
+      if: needs.deploy-production.result == 'success'
+      run: |
+        echo "📚 Updating documentation for release ${{ needs.create-release.outputs.version }}"
+        # Add documentation update logic

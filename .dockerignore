@@ -1,0 +1,69 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+CI_CD_README.md
+DEPLOYMENT_GUIDE.md
+PROJECT_PLAN.md
+*.md
+
+# CI/CD
+.github/
+.vscode/
+.vs/
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.dll
+*.pdb
+*.exe
+TestResults/
+coverage/
+
+# Angular
+frontend/angular-app/dist/
+frontend/angular-app/node_modules/
+frontend/angular-app/.angular/
+frontend/angular-app/coverage/
+
+# Terraform
+terraform/
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# Database
+database/
+
+# Monitoring
+monitoring/
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+tmp/
+temp/

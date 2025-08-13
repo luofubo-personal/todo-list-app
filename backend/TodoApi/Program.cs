@@ -36,6 +36,9 @@ namespace TodoApi
                     options.UseSqlServer(connectionString));
             }
 
+            // Add health checks
+            builder.Services.AddHealthChecks();
+
             builder.Services.AddControllers();
 
             // Add CORS services with specific origins
@@ -84,6 +87,7 @@ namespace TodoApi
             app.UseAuthorization();
 
             app.MapControllers();
+            app.MapHealthChecks("/health");
 
             app.Run();
         }
