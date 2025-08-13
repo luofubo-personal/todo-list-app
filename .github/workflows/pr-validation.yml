@@ -104,13 +104,13 @@ jobs:
         
     - name: Build .NET projects
       run: |
-        dotnet build backend/TodoApi/TodoApi.csproj --no-restore
-        dotnet build backend/TodoApi.Tests/TodoApi.Tests.csproj --no-restore
+        dotnet build backend/TodoApi/TodoApi.csproj --no-restore --configuration Release
+        dotnet build backend/TodoApi.Tests/TodoApi.Tests.csproj --no-restore --configuration Release
         
     - name: Run .NET unit tests
       run: |
         dotnet test backend/TodoApi.Tests/TodoApi.Tests.csproj \
-          --no-build \
+          --configuration Release \
           --verbosity normal \
           --collect:"XPlat Code Coverage" \
           --logger trx \
