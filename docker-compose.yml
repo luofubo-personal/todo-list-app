@@ -1,7 +1,28 @@
 version: '3.8'
 
 services:
-  # SQL Server database
+  # SQL Server database (alternative: use PostgreSQL for lighter resource usage)
+  database:
+    image: postgres:15-alpine
+    container_name: todo-database
+    environment:
+      - POSTGRES_DB=TodoDb
+      - POSTGRES_USER=todouser
+      - POSTGRES_PASSWORD=todopass123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - todo-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U todouser -d TodoDb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # SQL Server (optional - for production-like testing)
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: todo-sqlserver
@@ -21,6 +42,8 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
+    profiles:
+      - sqlserver  # Only start when explicitly requested
 
   # Backend API
   backend:
@@ -31,13 +54,13 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
-      - ConnectionStrings__TodoContext=Server=sqlserver,1433;Database=TodoDb;User Id=sa;Password=YourStrong@Passw0rd123;TrustServerCertificate=true;
+      - ConnectionStrings__TodoContext=Host=database;Port=5432;Database=TodoDb;Username=todouser;Password=todopass123;
       - AllowedOrigins__0=http://localhost:4200
       - AllowedOrigins__1=http://frontend:80
     ports:
       - "5001:8080"
     depends_on:
-      sqlserver:
+      database:
         condition: service_healthy
     networks:
       - todo-network
@@ -115,6 +138,8 @@ services:
     restart: unless-stopped
 
 volumes:
+  postgres_data:
+    driver: local
   sqlserver_data:
     driver: local
   redis_data:
