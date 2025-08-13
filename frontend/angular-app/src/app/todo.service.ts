@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 import { Todo } from './todo';
 import { environment } from '../environments/environment';
@@ -64,11 +64,32 @@ export class TodoService {
    */
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
+      // Log error details for debugging
+      console.error(`${operation} failed:`, error);
 
-      // TODO: better job of transforming error for user consumption
-      console.error(error); // log to console instead
+      // Extract user-friendly error message
+      let errorMessage = 'An unexpected error occurred';
 
-      // Let the app keep running by returning an empty result.
+      if (error.error) {
+        if (typeof error.error === 'string') {
+          errorMessage = error.error;
+        } else if (error.error.message) {
+          errorMessage = error.error.message;
+        } else if (error.error.title) {
+          errorMessage = error.error.title;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      // In a real application, you would:
+      // 1. Send error to logging service
+      // 2. Show user-friendly notification
+      // 3. Possibly retry the operation
+
+      console.warn(`User message: ${errorMessage}`);
+
+      // Let the app keep running by returning an empty result
       return of(result as T);
     };
   }

@@ -77,4 +77,49 @@ describe('TodoService', () => {
     expect(req.request.method).toBe('DELETE');
     req.flush(null);
   });
+
+  it('should handle error when getting todos fails', () => {
+    const errorMessage = 'Server error';
+
+    service.getTodos().subscribe((todos: Todo[]) => {
+      expect(todos).toEqual([]);
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/todos`);
+    req.flush(errorMessage, { status: 500, statusText: 'Server Error' });
+  });
+
+  it('should handle error when adding todo fails', () => {
+    const newTodo: Todo = { id: 3, text: 'New Todo', completed: false, timestamp: new Date() };
+    const errorMessage = 'Validation error';
+
+    service.addTodo(newTodo).subscribe((todo: Todo | undefined) => {
+      expect(todo).toBeUndefined();
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/todos`);
+    req.flush(errorMessage, { status: 400, statusText: 'Bad Request' });
+  });
+
+  it('should handle error when updating todo fails', () => {
+    const updatedTodo: Todo = { id: 1, text: 'Updated Todo', completed: true, timestamp: new Date() };
+
+    service.updateTodo(updatedTodo).subscribe((response: any) => {
+      expect(response).toBeUndefined();
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/todos/1`);
+    req.flush('Not found', { status: 404, statusText: 'Not Found' });
+  });
+
+  it('should handle error when deleting todo fails', () => {
+    const todoId = 1;
+
+    service.deleteTodo(todoId).subscribe((response: any) => {
+      expect(response).toBeUndefined();
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/todos/1`);
+    req.flush('Not found', { status: 404, statusText: 'Not Found' });
+  });
 });

@@ -1,40 +1,91 @@
-# Todo List Application - Azure Cloud Version
+# Todo List Application - Multi-Implementation Project
 
-A full-stack todo list application with Angular frontend, .NET backend, SQL database, and Azure deployment using Terraform.
+This project contains **two different implementations** of a todo list application:
 
-## Architecture
+## 🚀 Implementation Options
 
-The application follows a modern cloud architecture:
+### Option 1: Simple Client-Side Application (Root Directory)
+- **Files**: `index.html`, `script.ts`, `style.css`
+- **Technology**: Pure HTML/CSS/TypeScript with localStorage
+- **Use Case**: Quick prototyping, learning, or simple deployment
+- **Data Storage**: Browser localStorage (client-side only)
 
-1. **Frontend**: Angular application hosted statically
-2. **Backend**: .NET 6 Web API with Entity Framework Core
-3. **Database**: Azure SQL Database
+### Option 2: Full-Stack Cloud Application (Subdirectories)
+- **Frontend**: Angular application (`frontend/angular-app/`)
+- **Backend**: .NET 9 Web API (`backend/TodoApi/`)
+- **Database**: Azure SQL Database
+- **Infrastructure**: Azure App Service with Terraform IaC
+- **Use Case**: Production-ready, scalable cloud application
+
+## 🏗️ Architecture (Full-Stack Version)
+
+The full-stack application follows a modern cloud architecture:
+
+1. **Frontend**: Angular application with TypeScript
+2. **Backend**: .NET 9 Web API with Entity Framework Core
+3. **Database**: Azure SQL Database with proper indexing
 4. **Infrastructure**: Azure App Service for the backend
 5. **Deployment**: Terraform scripts for infrastructure as code
+6. **Security**: CORS configuration, input validation, error handling
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 todo-list-app/
-├── frontend/              # Angular frontend application
-├── backend/               # .NET 6 Web API backend
-├── terraform/             # Terraform scripts for Azure deployment
+├── index.html            # Simple version - HTML entry point
+├── script.ts             # Simple version - TypeScript logic
+├── style.css             # Simple version - Styling
+├── tsconfig.json         # TypeScript configuration for simple version
+├── frontend/             # Full-stack version - Angular frontend
+│   └── angular-app/      # Angular application
+├── backend/              # Full-stack version - .NET 9 Web API
+│   ├── TodoApi/          # Main API project
+│   └── TodoApi.Tests/    # Unit tests
+├── terraform/            # Infrastructure as Code (Azure)
 ├── database/             # SQL database schema and seed data
 ├── README.md             # This file
 └── LICENSE               # License information
 ```
 
-## Features
+## 🎯 Quick Start Guide
 
-- Add new todo items
-- Mark todos as complete/incomplete
-- Delete todos
-- Data persistence using Azure SQL Database
-- Responsive design for all devices
-- Clean and modern UI
-- RESTful API for frontend-backend communication
-- CORS support for cross-origin requests
-- HTTPS enforcement for secure communication
+### Simple Version (Client-Side Only)
+
+1. **Compile TypeScript** (optional):
+   ```bash
+   tsc script.ts
+   ```
+
+2. **Open in browser**:
+   ```bash
+   open index.html
+   ```
+
+### Full-Stack Version
+
+Choose this for production applications with user authentication, data persistence, and scalability.
+
+## ✨ Features
+
+### Simple Version
+- ✅ Add new todo items
+- ✅ Mark todos as complete/incomplete
+- ✅ Delete todos
+- ✅ Data persistence using localStorage
+- ✅ Responsive design for all devices
+- ✅ Clean and modern UI
+
+### Full-Stack Version
+- ✅ All simple version features
+- ✅ RESTful API with comprehensive error handling
+- ✅ Input validation and sanitization
+- ✅ Azure SQL Database with proper indexing
+- ✅ Secure CORS configuration
+- ✅ HTTPS enforcement
+- ✅ Comprehensive unit test coverage
+- ✅ Infrastructure as Code with Terraform
+- ✅ Environment-specific configuration
+- ✅ Production-ready logging and monitoring setup
 
 ## Prerequisites
 

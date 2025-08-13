@@ -1,11 +1,11 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.InMemory;
 using TodoApi.Data;
+using System;
+using System.Collections.Generic;
 
 namespace TodoApi
 {
@@ -16,20 +16,53 @@ namespace TodoApi
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddDbContext<TodoContext>(options =>
-                options.UseInMemoryDatabase("TodoList"));
+            // Configure database based on environment
+            if (builder.Environment.IsDevelopment())
+            {
+                // Use InMemory database for development
+                builder.Services.AddDbContext<TodoContext>(options =>
+                    options.UseInMemoryDatabase("TodoList"));
+            }
+            else
+            {
+                // Use SQL Server for production
+                var connectionString = builder.Configuration.GetConnectionString("TodoContext");
+                if (string.IsNullOrEmpty(connectionString))
+                {
+                    throw new InvalidOperationException("Connection string 'TodoContext' not found.");
+                }
+
+                builder.Services.AddDbContext<TodoContext>(options =>
+                    options.UseSqlServer(connectionString));
+            }
 
             builder.Services.AddControllers();
 
-            // Add CORS services
+            // Add CORS services with specific origins
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll",
-                    builder =>
+                options.AddPolicy("AllowSpecificOrigins",
+                    corsBuilder =>
                     {
-                        builder.AllowAnyOrigin()
-                               .AllowAnyMethod()
-                               .AllowAnyHeader();
+                        var allowedOrigins = new List<string>
+                        {
+                            "http://localhost:4200",  // Angular dev server
+                            "https://localhost:4200", // Angular dev server HTTPS
+                            "http://localhost:3000",  // Alternative dev port
+                            "https://localhost:3000"  // Alternative dev port HTTPS
+                        };
+
+                        // Add production origins from configuration
+                        var configuredOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+                        if (configuredOrigins != null)
+                        {
+                            allowedOrigins.AddRange(configuredOrigins);
+                        }
+
+                        corsBuilder.WithOrigins(allowedOrigins.ToArray())
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials(); // Allow credentials for better security
                     });
             });
 
@@ -45,8 +78,8 @@ namespace TodoApi
 
             app.UseRouting();
 
-            // Enable CORS
-            app.UseCors("AllowAll");
+            // Enable CORS with specific origins
+            app.UseCors("AllowSpecificOrigins");
 
             app.UseAuthorization();
 

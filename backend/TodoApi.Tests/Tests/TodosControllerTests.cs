@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,23 +21,24 @@ namespace TodoApi.Tests.Tests
         {
             // Arrange
             var mockContext = new Mock<TodoContext>(new DbContextOptionsBuilder<TodoContext>().Options);
-            
+
             var data = new List<Todo>
             {
                 new Todo { Id = 1, Text = "Task 1", Completed = false },
                 new Todo { Id = 2, Text = "Task 2", Completed = true }
             };
-            
+
             mockContext.Setup(c => c.Todos).ReturnsDbSet(data);
-            
+
             var controller = new TodosController(mockContext.Object);
-            
+
             // Act
             var result = await controller.GetTodos();
-            
+
             // Assert
             var actionResult = Assert.IsType<ActionResult<IEnumerable<Todo>>>(result);
-            var returnValue = Assert.IsType<List<Todo>>(actionResult.Value);
+            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+            var returnValue = Assert.IsType<List<Todo>>(okResult.Value);
             Assert.Equal(2, returnValue.Count);
         }
         
@@ -45,24 +47,25 @@ namespace TodoApi.Tests.Tests
         {
             // Arrange
             var mockContext = new Mock<TodoContext>(new DbContextOptionsBuilder<TodoContext>().Options);
-            
+
             var data = new List<Todo>
             {
                 new Todo { Id = 1, Text = "Task 1", Completed = false },
                 new Todo { Id = 2, Text = "Task 2", Completed = true }
             };
-            
+
             mockContext.Setup(c => c.Todos).ReturnsDbSet(data);
             mockContext.Setup(c => c.Todos.FindAsync(1)).ReturnsAsync(data.First());
-            
+
             var controller = new TodosController(mockContext.Object);
-            
+
             // Act
             var result = await controller.GetTodo(1);
-            
+
             // Assert
             var actionResult = Assert.IsType<ActionResult<Todo>>(result);
-            var returnValue = Assert.IsType<Todo>(actionResult.Value);
+            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+            var returnValue = Assert.IsType<Todo>(okResult.Value);
             Assert.Equal(1, returnValue.Id);
         }
         
@@ -71,20 +74,20 @@ namespace TodoApi.Tests.Tests
         {
             // Arrange
             var mockContext = new Mock<TodoContext>(new DbContextOptionsBuilder<TodoContext>().Options);
-            
+
             var data = new List<Todo>();
-            
+
             mockContext.Setup(c => c.Todos).ReturnsDbSet(data);
-            mockContext.Setup(c => c.Todos.FindAsync(1)).ReturnsAsync((Todo)null);
-            
+            mockContext.Setup(c => c.Todos.FindAsync(1)).ReturnsAsync((Todo?)null);
+
             var controller = new TodosController(mockContext.Object);
-            
+
             // Act
             var result = await controller.GetTodo(1);
-            
+
             // Assert
             var actionResult = Assert.IsType<ActionResult<Todo>>(result);
-            Assert.IsType<NotFoundResult>(actionResult.Result);
+            Assert.IsType<NotFoundObjectResult>(actionResult.Result);
         }
         
         [Fact]
@@ -92,21 +95,82 @@ namespace TodoApi.Tests.Tests
         {
             // Arrange
             var mockContext = new Mock<TodoContext>(new DbContextOptionsBuilder<TodoContext>().Options);
-            
+
             var data = new List<Todo>();
             mockContext.Setup(c => c.Todos).ReturnsDbSet(data);
-            
+
             var controller = new TodosController(mockContext.Object);
             var newItem = new Todo { Text = "New Task" };
-            
+
             // Act
             var result = await controller.PostTodo(newItem);
-            
+
             // Assert
             var actionResult = Assert.IsType<ActionResult<Todo>>(result);
             var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(actionResult.Result);
             var returnValue = Assert.IsType<Todo>(createdAtActionResult.Value);
             Assert.Equal(newItem.Text, returnValue.Text);
+        }
+
+        [Fact]
+        public async Task PostTodo_ReturnsBadRequest_WhenTextIsEmpty()
+        {
+            // Arrange
+            var mockContext = new Mock<TodoContext>(new DbContextOptionsBuilder<TodoContext>().Options);
+            var controller = new TodosController(mockContext.Object);
+            var newItem = new Todo { Text = "" };
+
+            // Act
+            var result = await controller.PostTodo(newItem);
+
+            // Assert
+            var actionResult = Assert.IsType<ActionResult<Todo>>(result);
+            Assert.IsType<BadRequestObjectResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task PostTodo_ReturnsBadRequest_WhenTextIsTooLong()
+        {
+            // Arrange
+            var mockContext = new Mock<TodoContext>(new DbContextOptionsBuilder<TodoContext>().Options);
+            var controller = new TodosController(mockContext.Object);
+            var newItem = new Todo { Text = new string('a', 501) }; // 501 characters
+
+            // Act
+            var result = await controller.PostTodo(newItem);
+
+            // Assert
+            var actionResult = Assert.IsType<ActionResult<Todo>>(result);
+            Assert.IsType<BadRequestObjectResult>(actionResult.Result);
+        }
+
+        [Fact]
+        public async Task PutTodo_ReturnsBadRequest_WhenIdMismatch()
+        {
+            // Arrange
+            var mockContext = new Mock<TodoContext>(new DbContextOptionsBuilder<TodoContext>().Options);
+            var controller = new TodosController(mockContext.Object);
+            var todo = new Todo { Id = 1, Text = "Test" };
+
+            // Act
+            var result = await controller.PutTodo(2, todo); // Different IDs
+
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
+        public async Task DeleteTodo_ReturnsBadRequest_WhenIdIsInvalid()
+        {
+            // Arrange
+            var mockContext = new Mock<TodoContext>(new DbContextOptionsBuilder<TodoContext>().Options);
+            var controller = new TodosController(mockContext.Object);
+
+            // Act
+            var result = await controller.DeleteTodo(0); // Invalid ID
+
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(result);
         }
     }
 }
