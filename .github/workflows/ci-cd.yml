@@ -7,6 +7,14 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  actions: read
+  checks: write
+  pull-requests: write
+  statuses: write
+  packages: write
+
 env:
   DOTNET_VERSION: '9.0.x'
   NODE_VERSION: '22.x'
@@ -87,6 +95,8 @@ jobs:
         directory: ./TestResults
         flags: backend
         name: backend-coverage
+        token: ${{ secrets.CODECOV_TOKEN }}
+        fail_ci_if_error: false
         
     - name: Publish backend artifacts
       run: |
@@ -170,6 +180,8 @@ jobs:
         directory: ${{ env.ANGULAR_APP_PATH }}/coverage
         flags: frontend
         name: frontend-coverage
+        token: ${{ secrets.CODECOV_TOKEN }}
+        fail_ci_if_error: false
         
     - name: Build frontend for production
       working-directory: ${{ env.ANGULAR_APP_PATH }}
@@ -187,11 +199,11 @@ jobs:
     name: Security Scan
     runs-on: ubuntu-latest
     needs: [backend-ci, frontend-ci]
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
@@ -199,9 +211,10 @@ jobs:
         scan-ref: '.'
         format: 'sarif'
         output: 'trivy-results.sarif'
-        
+
     - name: Upload Trivy scan results
       uses: github/codeql-action/upload-sarif@v3
+      if: always()
       with:
         sarif_file: 'trivy-results.sarif'
 
