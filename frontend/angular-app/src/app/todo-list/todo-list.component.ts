@@ -3,9 +3,10 @@ import { Todo } from '../todo';
 import { TodoService } from '../todo.service';
 
 @Component({
-  selector: 'app-todo-list',
-  templateUrl: './todo-list.component.html',
-  styleUrls: ['./todo-list.component.css']
+    selector: 'app-todo-list',
+    templateUrl: './todo-list.component.html',
+    styleUrls: ['./todo-list.component.css'],
+    standalone: false
 })
 export class TodoListComponent implements OnInit {
   todos: Todo[] = [];
