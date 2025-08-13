@@ -1,18 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Todo } from '../todo';
 import { TodoService } from '../todo.service';
+import { TodoItemComponent } from '../todo-item/todo-item.component';
 
 @Component({
     selector: 'app-todo-list',
     templateUrl: './todo-list.component.html',
     styleUrls: ['./todo-list.component.css'],
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, FormsModule, TodoItemComponent]
 })
 export class TodoListComponent implements OnInit {
   todos: Todo[] = [];
   newTodoText = '';
 
-  constructor(private todoService: TodoService) { }
+  private todoService = inject(TodoService);
 
   ngOnInit(): void {
     this.getTodos();

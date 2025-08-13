@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/todo-item/todo-item.component.css"],
+  "sourcesContent": [".todo-item {\n  display: flex;\n  align-items: center;\n  padding: 15px 0;\n  border-bottom: 1px solid #f0f0f0;\n}\n\n.todo-item:last-child {\n  border-bottom: none;\n}\n\n.todo-item.completed .todo-text {\n  text-decoration: line-through;\n  color: #999;\n}\n\n.todo-checkbox {\n  margin-right: 15px;\n  width: 18px;\n  height: 18px;\n  cursor: pointer;\n}\n\n.todo-text {\n  flex: 1;\n  font-size: 1.1rem;\n}\n\n.delete-btn {\n  background-color: #e74c3c;\n  color: white;\n  border: none;\n  border-radius: 3px;\n  padding: 5px 10px;\n  cursor: pointer;\n  font-size: 0.8rem;\n  transition: background-color 0.3s;\n}\n\n.delete-btn:hover {\n  background-color: #c0392b;\n}"],
+  "mappings": ";AAAA,CAAC;AACC,WAAS;AACT,eAAa;AACb,WAAS,KAAK;AACd,iBAAe,IAAI,MAAM;AAC3B;AAEA,CAPC,SAOS;AACR,iBAAe;AACjB;AAEA,CAXC,SAWS,CAAC,UAAU,CAAC;AACpB,mBAAiB;AACjB,SAAO;AACT;AAEA,CAAC;AACC,gBAAc;AACd,SAAO;AACP,UAAQ;AACR,UAAQ;AACV;AAEA,CAZsB;AAapB,QAAM;AACN,aAAW;AACb;AAEA,CAAC;AACC,oBAAkB;AAClB,SAAO;AACP,UAAQ;AACR,iBAAe;AACf,WAAS,IAAI;AACb,UAAQ;AACR,aAAW;AACX,cAAY,iBAAiB;AAC/B;AAEA,CAXC,UAWU;AACT,oBAAkB;AACpB;",
+  "names": []
+}

@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TodoListComponent } from './todo-list.component';
 import { TodoService } from '../todo.service';
 import { of } from 'rxjs';
-import { FormsModule } from '@angular/forms';
 
 describe('TodoListComponent', () => {
   let component: TodoListComponent;
@@ -14,8 +13,7 @@ describe('TodoListComponent', () => {
     const spy = jasmine.createSpyObj('TodoService', ['getTodos', 'addTodo', 'updateTodo', 'deleteTodo']);
 
     await TestBed.configureTestingModule({
-      imports: [FormsModule],
-      declarations: [ TodoListComponent ],
+      imports: [TodoListComponent],
       providers: [
         { provide: TodoService, useValue: spy }
       ]

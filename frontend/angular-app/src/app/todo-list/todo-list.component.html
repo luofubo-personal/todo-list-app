@@ -14,7 +14,7 @@
     <app-todo-item
       *ngFor="let todo of todos"
       [todo]="todo"
-      (toggle)="toggleComplete(todo)"
+      (toggleTodo)="toggleComplete(todo)"
       (deleteTodo)="deleteTodo(todo)">
     </app-todo-item>
   </ul>
