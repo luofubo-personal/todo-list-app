@@ -1,9 +1,11 @@
-name: Pull Request Validation
+name: Pull Request Validation (Manual Only)
 
 on:
-  pull_request:
-    branches: [ main, develop ]
-    types: [opened, synchronize, reopened]
+  # Disabled - only basic CI will run automatically
+  # pull_request:
+  #   branches: [ main, develop ]
+  #   types: [opened, synchronize, reopened]
+  workflow_dispatch:    # Allow manual triggering only
 
 permissions:
   contents: read

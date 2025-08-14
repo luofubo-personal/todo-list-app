@@ -1,15 +1,17 @@
-name: CI Pipeline (CD Disabled)
+name: Advanced CI Pipeline (Manual Only)
 
-# This workflow runs CI (Continuous Integration) only
+# This workflow is DISABLED for automatic triggers
+# Only runs when manually triggered via workflow_dispatch
 # All deployment jobs are disabled (if: false)
-# Only build, test, and security scanning will run
+# Use basic-ci.yml for automatic CI on pushes
 
 on:
-  push:
-    branches: [ main ]  # Only trigger on main branch pushes
-  pull_request:
-    branches: [ main ]  # Trigger on PRs to main
-  workflow_dispatch:    # Allow manual triggering
+  # Disabled - only basic CI will run automatically
+  # push:
+  #   branches: [ main ]  # Only trigger on main branch pushes
+  # pull_request:
+  #   branches: [ main ]  # Trigger on PRs to main
+  workflow_dispatch:    # Allow manual triggering only
 
 permissions:
   contents: read
