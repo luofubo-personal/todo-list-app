@@ -14,9 +14,22 @@ A modern, production-ready full-stack todo list application built with Angular f
 
 ## 🚀 Features
 
+### ⏰ Deadline Management System
+- ✅ **Optional Deadlines** - Add due dates with datetime picker
+- ✅ **Real-time Countdown Timers** - Live updates every minute
+- ✅ **Smart Time Formatting** - "2d 5h", "3h 45m", "15m", "Overdue"
+- ✅ **Automatic Priority Sorting** - Urgent items appear first
+- ✅ **Visual Priority Indicators** - Color-coded urgency levels
+- ✅ **24-hour Time Display** - Consistent HH:MM format
+- ✅ **Overdue Detection** - Clear indicators for past deadlines
+
 ### Core Functionality
 - ✅ **Add, edit, and delete todos** with real-time updates
 - ✅ **Mark todos as complete/incomplete** with visual feedback
+- ✅ **Optional deadline management** with datetime picker
+- ✅ **Real-time countdown timers** with smart formatting (2d 5h, 3h 45m, 15m)
+- ✅ **Priority-based sorting** with automatic urgency calculation
+- ✅ **Visual priority indicators** (Red/Orange/Blue/Green color coding)
 - ✅ **Todo counter** showing remaining items
 - ✅ **Responsive design** works on all devices
 - ✅ **Error handling** with user-friendly messages
@@ -51,10 +64,10 @@ A modern, production-ready full-stack todo list application built with Angular f
 - **SQL Server** - Enterprise option with Docker profile
 
 ### DevOps & Quality
-- **GitHub Actions** - 4 comprehensive CI/CD workflows
+- **GitHub Actions** - 4 CI/CD workflows (Basic CI active, others manual)
 - **Docker & Docker Compose** - Multi-environment containerization
 - **Trivy Security Scanning** - Vulnerability detection
-- **SonarQube Ready** - Code quality analysis
+- **ESLint Code Quality** - Angular-specific linting and standards
 - **Terraform** - Infrastructure as Code for Azure deployment
 
 ## 🏃‍♂️ Quick Start
@@ -153,19 +166,20 @@ dotnet test --filter "TodoControllerTests"
 
 ### Quality Metrics
 - ✅ **ESLint**: 0 errors (100% compliant)
-- ✅ **Tests**: 10/10 passing (100% success rate)
+- ✅ **Tests**: 92/92 passing (53 frontend + 39 backend, 100% success rate)
 - ✅ **TypeScript**: Strict mode, no `any` types
 - ✅ **Code Coverage**: Comprehensive test coverage
 - ✅ **Security**: Trivy scanning, npm audit
+- ✅ **Deadline Features**: Complete with countdown timers and priority sorting
 
 ## 🚀 Deployment Options
 
 ### 1. GitHub Actions (Recommended)
-Automated deployment with 4 comprehensive workflows:
-- **basic-ci.yml** - Quick validation and testing
-- **ci-cd.yml** - Full build, test, security scan, and deploy
-- **pr-validation.yml** - Pull request validation
-- **release.yml** - Production release management
+Automated CI/CD with 4 workflows (optimized for performance):
+- **basic-ci.yml** - ✅ **Active**: Quick validation and testing (auto-triggers)
+- **ci-cd.yml** - ⏸️ **Manual**: Full build, test, security scan (manual trigger)
+- **pr-validation.yml** - ⏸️ **Manual**: Comprehensive PR validation (manual trigger)
+- **release.yml** - ✅ **Active**: Production release management (tag triggers)
 
 ### 2. Docker Deployment
 ```bash
