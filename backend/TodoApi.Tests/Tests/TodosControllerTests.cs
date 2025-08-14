@@ -41,6 +41,41 @@ namespace TodoApi.Tests.Tests
             var returnValue = Assert.IsType<List<Todo>>(okResult.Value);
             Assert.Equal(2, returnValue.Count);
         }
+
+        [Fact]
+        public async Task GetTodos_ReturnsSortedByPriority()
+        {
+            // Arrange
+            var mockContext = new Mock<TodoContext>(new DbContextOptionsBuilder<TodoContext>().Options);
+
+            var now = DateTime.UtcNow;
+            var data = new List<Todo>
+            {
+                new Todo { Id = 1, Text = "No deadline", Completed = false, Timestamp = now },
+                new Todo { Id = 2, Text = "Overdue", Completed = false, Timestamp = now, Deadline = now.AddHours(-1) },
+                new Todo { Id = 3, Text = "Urgent", Completed = false, Timestamp = now, Deadline = now.AddHours(12) },
+                new Todo { Id = 4, Text = "Completed", Completed = true, Timestamp = now, Deadline = now.AddHours(1) }
+            };
+
+            mockContext.Setup(c => c.Todos).ReturnsDbSet(data);
+
+            var controller = new TodosController(mockContext.Object);
+
+            // Act
+            var result = await controller.GetTodos();
+
+            // Assert
+            var actionResult = Assert.IsType<ActionResult<IEnumerable<Todo>>>(result);
+            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+            var returnValue = Assert.IsType<List<Todo>>(okResult.Value);
+
+            // Should be sorted: incomplete items first (by priority), then completed items
+            Assert.Equal(4, returnValue.Count);
+            Assert.Equal("Overdue", returnValue[0].Text); // Priority 1 (overdue)
+            Assert.Equal("Urgent", returnValue[1].Text);  // Priority 2 (< 24h)
+            Assert.Equal("No deadline", returnValue[2].Text); // Priority 5 (no deadline)
+            Assert.Equal("Completed", returnValue[3].Text); // Completed items last
+        }
         
         [Fact]
         public async Task GetTodo_ReturnsItem_WhenItemExists()

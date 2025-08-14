@@ -43,6 +43,49 @@ describe('TodoService', () => {
     req.flush(mockTodos);
   });
 
+  it('should retrieve todos with deadlines from the API via GET', () => {
+    const futureDate = new Date();
+    futureDate.setHours(futureDate.getHours() + 2);
+
+    const pastDate = new Date();
+    pastDate.setHours(pastDate.getHours() - 1);
+
+    const mockTodos: Todo[] = [
+      {
+        id: 1,
+        text: 'Urgent Todo',
+        completed: false,
+        timestamp: new Date(),
+        deadline: futureDate,
+        isOverdue: false,
+        timeRemaining: '2h',
+        priority: 2
+      },
+      {
+        id: 2,
+        text: 'Overdue Todo',
+        completed: false,
+        timestamp: new Date(),
+        deadline: pastDate,
+        isOverdue: true,
+        timeRemaining: 'Overdue',
+        priority: 1
+      }
+    ];
+
+    service.getTodos().subscribe((todos: Todo[]) => {
+      expect(todos.length).toBe(2);
+      expect(todos[0].deadline).toEqual(futureDate);
+      expect(todos[0].isOverdue).toBe(false);
+      expect(todos[1].isOverdue).toBe(true);
+      expect(todos[1].priority).toBe(1);
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/todos`);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockTodos);
+  });
+
   it('should add a todo via POST', () => {
     const newTodo: Todo = { id: 3, text: 'New Todo', completed: false, timestamp: new Date() };
 
@@ -52,6 +95,30 @@ describe('TodoService', () => {
 
     const req = httpMock.expectOne(`${environment.apiUrl}/api/todos`);
     expect(req.request.method).toBe('POST');
+    req.flush(newTodo);
+  });
+
+  it('should add a todo with deadline via POST', () => {
+    const deadline = new Date();
+    deadline.setDate(deadline.getDate() + 1);
+
+    const newTodo: Todo = {
+      id: 3,
+      text: 'Todo with deadline',
+      completed: false,
+      timestamp: new Date(),
+      deadline: deadline,
+      priority: 3
+    };
+
+    service.addTodo(newTodo).subscribe((todo: Todo) => {
+      expect(todo.deadline).toEqual(deadline);
+      expect(todo.priority).toBe(3);
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/api/todos`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body.deadline).toEqual(deadline);
     req.flush(newTodo);
   });
 

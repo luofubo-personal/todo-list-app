@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Todo } from '../todo';
 
@@ -9,10 +9,18 @@ import { Todo } from '../todo';
     standalone: true,
     imports: [CommonModule]
 })
-export class TodoItemComponent {
+export class TodoItemComponent implements OnChanges {
   @Input() todo!: Todo;
   @Output() toggleTodo = new EventEmitter<Todo>();
   @Output() deleteTodo = new EventEmitter<Todo>();
+
+  private _isUrgent = false;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['todo']) {
+      this._isUrgent = this.calculateUrgency();
+    }
+  }
 
   onToggle(): void {
     this.toggleTodo.emit(this.todo);
@@ -46,6 +54,10 @@ export class TodoItemComponent {
   }
 
   isUrgent(): boolean {
+    return this._isUrgent;
+  }
+
+  private calculateUrgency(): boolean {
     if (!this.todo.deadline || this.todo.completed) {
       return false;
     }
