@@ -38,7 +38,12 @@ export class TodoItemComponent implements OnChanges {
 
     const daysDiff = Math.floor((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 
-    const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    // Format time in 24-hour format (HH:MM)
+    const timeString = date.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
 
     if (daysDiff === 0) {
       return `Today at ${timeString}`;
