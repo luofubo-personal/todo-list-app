@@ -1,4 +1,8 @@
-name: CI/CD Pipeline
+name: CI Pipeline (CD Disabled)
+
+# This workflow runs CI (Continuous Integration) only
+# All deployment jobs are disabled (if: false)
+# Only build, test, and security scanning will run
 
 on:
   push:
@@ -237,12 +241,12 @@ jobs:
         path: 'trivy-results.sarif'
         retention-days: 30
 
-  # Deploy to staging
+  # Deploy to staging - DISABLED
   deploy-staging:
-    name: Deploy to Staging
+    name: Deploy to Staging (Disabled)
     runs-on: ubuntu-latest
     needs: [backend-ci, frontend-ci, security-scan]
-    if: github.ref == 'refs/heads/develop'
+    if: false  # Deployment disabled - only CI will run
     environment: staging
     
     steps:
@@ -274,12 +278,12 @@ jobs:
         app_location: "./frontend-artifacts"
         skip_app_build: true
 
-  # Deploy to production
+  # Deploy to production - DISABLED
   deploy-production:
-    name: Deploy to Production
+    name: Deploy to Production (Disabled)
     runs-on: ubuntu-latest
     needs: [backend-ci, frontend-ci, security-scan]
-    if: github.ref == 'refs/heads/main'
+    if: false  # Deployment disabled - only CI will run
     environment: production
     
     steps:
@@ -318,12 +322,12 @@ jobs:
         # Add your smoke test commands here
         curl -f https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/health || exit 1
 
-  # Notification
+  # Notification - DISABLED (no deployments)
   notify:
-    name: Notify Team
+    name: Notify Team (Disabled)
     runs-on: ubuntu-latest
     needs: [deploy-production, deploy-staging]
-    if: always()
+    if: false  # Disabled since deployments are disabled
     
     steps:
     - name: Notify on success
