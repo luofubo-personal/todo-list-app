@@ -34,7 +34,14 @@ export class TodoListComponent implements OnInit, OnDestroy {
   getTodos(): void {
     this.todoService.getTodos()
       .subscribe(todos => {
-        this.todos = todos;
+        // Ensure all todos have the required properties for deadline functionality
+        this.todos = todos.map(todo => ({
+          ...todo,
+          deadline: todo.deadline || undefined,
+          timeRemaining: todo.timeRemaining || undefined,
+          isOverdue: todo.isOverdue || false,
+          priority: todo.priority || 5
+        }));
         this.updateCountdowns();
       });
   }
@@ -48,17 +55,32 @@ export class TodoListComponent implements OnInit, OnDestroy {
 
   private updateCountdowns(): void {
     this.todos.forEach(todo => {
+      // Ensure todo has deadline property and it's not null/undefined
       if (todo.deadline && !todo.completed) {
-        const deadline = new Date(todo.deadline);
-        const now = new Date();
-        const timeDiff = deadline.getTime() - now.getTime();
+        try {
+          const deadline = new Date(todo.deadline);
+          const now = new Date();
 
-        if (timeDiff > 0) {
-          todo.timeRemaining = this.formatTimeRemaining(timeDiff);
+          // Check if deadline is a valid date
+          if (isNaN(deadline.getTime())) {
+            todo.timeRemaining = undefined;
+            todo.isOverdue = false;
+            return;
+          }
+
+          const timeDiff = deadline.getTime() - now.getTime();
+
+          if (timeDiff > 0) {
+            todo.timeRemaining = this.formatTimeRemaining(timeDiff);
+            todo.isOverdue = false;
+          } else {
+            todo.timeRemaining = 'Overdue';
+            todo.isOverdue = true;
+          }
+        } catch (error) {
+          console.warn('Error processing deadline for todo:', todo.id, error);
+          todo.timeRemaining = undefined;
           todo.isOverdue = false;
-        } else {
-          todo.timeRemaining = 'Overdue';
-          todo.isOverdue = true;
         }
       } else {
         todo.timeRemaining = undefined;
@@ -92,12 +114,24 @@ export class TodoListComponent implements OnInit, OnDestroy {
         text: this.newTodoText,
         completed: false,
         timestamp: new Date(),
-        deadline: this.newTodoDeadline ? new Date(this.newTodoDeadline) : undefined
+        deadline: this.newTodoDeadline ? new Date(this.newTodoDeadline) : undefined,
+        timeRemaining: undefined,
+        isOverdue: false,
+        priority: 5
       };
 
       this.todoService.addTodo(newTodo)
         .subscribe(todo => {
-          this.todos.push(todo);
+          // Ensure the returned todo has all required properties
+          const completeTodo = {
+            ...todo,
+            deadline: todo.deadline || undefined,
+            timeRemaining: todo.timeRemaining || undefined,
+            isOverdue: todo.isOverdue || false,
+            priority: todo.priority || 5
+          };
+
+          this.todos.push(completeTodo);
           this.newTodoText = '';
           this.newTodoDeadline = '';
           this.updateCountdowns();
