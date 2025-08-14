@@ -45,9 +45,12 @@ WIKI_REPO="${REPO_NAME}.wiki"
 if [ -d "${WIKI_REPO}" ]; then
     echo "Wiki directory already exists. Updating..."
     cd "${WIKI_REPO}"
-    git pull origin main
+    git pull origin main 2>/dev/null || echo "Could not pull from origin, continuing with local files..."
 else
-    echo "Cloning wiki repository..."
+    echo "Creating new wiki repository locally..."
+    mkdir "${WIKI_REPO}"
+    cd "${WIKI_REPO}"
+    git init
     # Extract the base URL (handle both HTTPS and SSH formats)
     if [[ $REPO_URL == https://* ]]; then
         # HTTPS format
@@ -60,24 +63,16 @@ else
     fi
     
     echo "Wiki URL: $WIKI_URL"
-    git clone "$WIKI_URL" "${WIKI_REPO}" || {
-        echo "Failed to clone wiki repository. Creating new one..."
-        mkdir "${WIKI_REPO}"
-        cd "${WIKI_REPO}"
-        git init
-        # Note: You'll need to set the remote manually if creating new
-        echo "Please set the wiki remote manually:"
-        echo "git remote add origin $WIKI_URL"
-        echo "Then run this script again"
-        exit 1
-    }
+    git remote add origin "$WIKI_URL"
 fi
-
-cd "${WIKI_REPO}"
 
 # Copy wiki files from the main repository
 echo "Copying wiki files..."
 cp -r ../wiki/* .
+
+# Configure git user if not already set
+git config user.email "wiki-publisher@localhost" 2>/dev/null || true
+git config user.name "Wiki Publisher" 2>/dev/null || true
 
 # Add all files
 echo "Adding files to git..."
@@ -105,7 +100,11 @@ if ! git diff-index --quiet HEAD --; then
     - Contributing guidelines"
     
     echo "Pushing to GitHub..."
-    git push origin main
+    # Try to push, if it fails because the branch doesn't exist, create it
+    git push origin main 2>/dev/null || {
+        echo "Creating main branch and pushing..."
+        git push -u origin main
+    }
     
     echo "Wiki published successfully!"
 else
