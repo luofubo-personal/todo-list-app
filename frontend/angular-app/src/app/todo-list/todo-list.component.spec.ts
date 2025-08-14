@@ -48,7 +48,12 @@ describe('TodoListComponent', () => {
     component.ngOnInit();
 
     expect(mockTodoService.getTodos).toHaveBeenCalled();
-    expect(component.todos).toEqual(mockTodos);
+    expect(component.todos.length).toBe(1);
+    expect(component.todos[0].text).toBe('Test Todo');
+    // The component now adds default properties, so we check they exist
+    expect(component.todos[0].deadline).toBeUndefined();
+    expect(component.todos[0].isOverdue).toBe(false);
+    expect(component.todos[0].priority).toBe(5);
   });
 
   it('should add todo without deadline', () => {
@@ -243,6 +248,137 @@ describe('TodoListComponent', () => {
       component.ngOnDestroy();
 
       expect(window.clearInterval).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Bug fix: Deadline property access', () => {
+    it('should handle todos without deadline property gracefully', () => {
+      // Simulate todos from API that might not have deadline properties
+      const todosWithoutDeadlineProps = [
+        { id: 1, text: 'Todo 1', completed: false, timestamp: new Date() },
+        { id: 2, text: 'Todo 2', completed: true, timestamp: new Date() }
+      ];
+
+      mockTodoService.getTodos.and.returnValue(of(todosWithoutDeadlineProps as Todo[]));
+
+      expect(() => {
+        component.getTodos();
+      }).not.toThrow();
+
+      expect(component.todos.length).toBe(2);
+      expect(component.todos[0].deadline).toBeUndefined();
+      expect(component.todos[0].isOverdue).toBe(false);
+      expect(component.todos[0].priority).toBe(5);
+    });
+
+    it('should handle updateCountdowns with undefined deadline properties', () => {
+      component.todos = [
+        { id: 1, text: 'Todo without deadline props', completed: false, timestamp: new Date() } as Todo,
+        { id: 2, text: 'Todo with null deadline', completed: false, timestamp: new Date(), deadline: null } as any
+      ];
+
+      expect(() => {
+        (component as any).updateCountdowns();
+      }).not.toThrow();
+
+      expect(component.todos[0].timeRemaining).toBeUndefined();
+      expect(component.todos[0].isOverdue).toBe(false);
+      expect(component.todos[1].timeRemaining).toBeUndefined();
+      expect(component.todos[1].isOverdue).toBe(false);
+    });
+
+    it('should handle invalid date objects in updateCountdowns', () => {
+      component.todos = [
+        {
+          id: 1,
+          text: 'Todo with invalid date',
+          completed: false,
+          timestamp: new Date(),
+          deadline: 'invalid-date' as any
+        }
+      ];
+
+      spyOn(console, 'warn');
+
+      expect(() => {
+        (component as any).updateCountdowns();
+      }).not.toThrow();
+
+      expect(component.todos[0].timeRemaining).toBeUndefined();
+      expect(component.todos[0].isOverdue).toBe(false);
+    });
+
+    it('should initialize all required properties when adding todos', () => {
+      const newTodo: Todo = {
+        id: 1,
+        text: 'New Todo',
+        completed: false,
+        timestamp: new Date()
+        // Note: no deadline properties
+      };
+
+      mockTodoService.addTodo.and.returnValue(of(newTodo));
+
+      component.newTodoText = 'New Todo';
+      component.addTodo();
+
+      expect(component.todos.length).toBe(1);
+      const addedTodo = component.todos[0];
+      expect(addedTodo.deadline).toBeUndefined();
+      expect(addedTodo.timeRemaining).toBeUndefined();
+      expect(addedTodo.isOverdue).toBe(false);
+      expect(addedTodo.priority).toBe(5);
+    });
+
+    it('should handle mixed todo data with and without deadline properties', () => {
+      const mixedTodos = [
+        { id: 1, text: 'Todo with deadline', completed: false, timestamp: new Date(), deadline: new Date() },
+        { id: 2, text: 'Todo without deadline', completed: false, timestamp: new Date() },
+        { id: 3, text: 'Todo with null deadline', completed: false, timestamp: new Date(), deadline: null }
+      ];
+
+      mockTodoService.getTodos.and.returnValue(of(mixedTodos as Todo[]));
+
+      expect(() => {
+        component.getTodos();
+      }).not.toThrow();
+
+      expect(component.todos.length).toBe(3);
+
+      // Todo with deadline should have all properties
+      expect(component.todos[0].deadline).toBeDefined();
+      expect(component.todos[0].priority).toBeDefined();
+
+      // Todo without deadline should have default values
+      expect(component.todos[1].deadline).toBeUndefined();
+      expect(component.todos[1].isOverdue).toBe(false);
+      expect(component.todos[1].priority).toBe(5);
+
+      // Todo with null deadline should be handled gracefully
+      expect(component.todos[2].deadline).toBeUndefined();
+      expect(component.todos[2].isOverdue).toBe(false);
+      expect(component.todos[2].priority).toBe(5);
+    });
+
+    it('should handle error in date parsing gracefully', () => {
+      component.todos = [
+        {
+          id: 1,
+          text: 'Todo with problematic deadline',
+          completed: false,
+          timestamp: new Date(),
+          deadline: 'not-a-date' as any // Invalid date string that will cause error
+        }
+      ];
+
+      // The main test is that this doesn't throw an error
+      expect(() => {
+        (component as any).updateCountdowns();
+      }).not.toThrow();
+
+      // And that the todo is handled gracefully with safe defaults
+      expect(component.todos[0].timeRemaining).toBeUndefined();
+      expect(component.todos[0].isOverdue).toBe(false);
     });
   });
 });

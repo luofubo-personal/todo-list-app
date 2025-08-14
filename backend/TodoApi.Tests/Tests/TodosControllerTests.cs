@@ -76,6 +76,85 @@ namespace TodoApi.Tests.Tests
             Assert.Equal("No deadline", returnValue[2].Text); // Priority 5 (no deadline)
             Assert.Equal("Completed", returnValue[3].Text); // Completed items last
         }
+
+        [Fact]
+        public async Task GetTodos_HandlesNullDeadlinesCorrectly()
+        {
+            // Arrange
+            var mockContext = new Mock<TodoContext>(new DbContextOptionsBuilder<TodoContext>().Options);
+
+            var now = DateTime.UtcNow;
+            var data = new List<Todo>
+            {
+                new Todo { Id = 1, Text = "Todo 1", Completed = false, Timestamp = now, Deadline = null },
+                new Todo { Id = 2, Text = "Todo 2", Completed = false, Timestamp = now, Deadline = null },
+                new Todo { Id = 3, Text = "Todo 3", Completed = true, Timestamp = now, Deadline = null }
+            };
+
+            mockContext.Setup(c => c.Todos).ReturnsDbSet(data);
+
+            var controller = new TodosController(mockContext.Object);
+
+            // Act
+            var result = await controller.GetTodos();
+
+            // Assert
+            var actionResult = Assert.IsType<ActionResult<IEnumerable<Todo>>>(result);
+            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+            var returnValue = Assert.IsType<List<Todo>>(okResult.Value);
+
+            Assert.Equal(3, returnValue.Count);
+
+            // All todos without deadlines should have priority 5
+            Assert.Equal(5, returnValue[0].Priority);
+            Assert.Equal(5, returnValue[1].Priority);
+            Assert.Equal(5, returnValue[2].Priority);
+
+            // Incomplete items should come first
+            Assert.False(returnValue[0].Completed);
+            Assert.False(returnValue[1].Completed);
+            Assert.True(returnValue[2].Completed);
+        }
+
+        [Fact]
+        public async Task GetTodos_HandlesMixedDeadlineData()
+        {
+            // Arrange
+            var mockContext = new Mock<TodoContext>(new DbContextOptionsBuilder<TodoContext>().Options);
+
+            var now = DateTime.UtcNow;
+            var data = new List<Todo>
+            {
+                new Todo { Id = 1, Text = "With deadline", Completed = false, Timestamp = now, Deadline = now.AddDays(1) },
+                new Todo { Id = 2, Text = "Without deadline", Completed = false, Timestamp = now, Deadline = null },
+                new Todo { Id = 3, Text = "Overdue", Completed = false, Timestamp = now, Deadline = now.AddHours(-2) },
+                new Todo { Id = 4, Text = "Completed with deadline", Completed = true, Timestamp = now, Deadline = now.AddHours(1) },
+                new Todo { Id = 5, Text = "Completed without deadline", Completed = true, Timestamp = now, Deadline = null }
+            };
+
+            mockContext.Setup(c => c.Todos).ReturnsDbSet(data);
+
+            var controller = new TodosController(mockContext.Object);
+
+            // Act
+            var result = await controller.GetTodos();
+
+            // Assert
+            var actionResult = Assert.IsType<ActionResult<IEnumerable<Todo>>>(result);
+            var okResult = Assert.IsType<OkObjectResult>(actionResult.Result);
+            var returnValue = Assert.IsType<List<Todo>>(okResult.Value);
+
+            Assert.Equal(5, returnValue.Count);
+
+            // Verify sorting: overdue first, then by priority, then completed items
+            Assert.Equal("Overdue", returnValue[0].Text); // Priority 1 (overdue)
+            Assert.Equal("With deadline", returnValue[1].Text); // Priority 4 (1 day)
+            Assert.Equal("Without deadline", returnValue[2].Text); // Priority 5 (no deadline)
+
+            // Completed items should be last
+            Assert.True(returnValue[3].Completed);
+            Assert.True(returnValue[4].Completed);
+        }
         
         [Fact]
         public async Task GetTodo_ReturnsItem_WhenItemExists()

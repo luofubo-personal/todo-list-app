@@ -239,5 +239,81 @@ namespace TodoApi.Tests.Tests
             // Act & Assert
             Assert.Equal(5, todo.Priority);
         }
+
+        [Fact]
+        public void Todo_HandlesNullDeadlineGracefully()
+        {
+            // Arrange
+            var todo = new Todo
+            {
+                Id = 1,
+                Text = "Todo without deadline",
+                Completed = false,
+                Deadline = null
+            };
+
+            // Act & Assert - Should not throw exceptions
+            Assert.False(todo.IsOverdue);
+            Assert.Null(todo.TimeRemaining);
+            Assert.Equal(5, todo.Priority);
+        }
+
+        [Fact]
+        public void Todo_DefaultValuesAreCorrect()
+        {
+            // Arrange & Act
+            var todo = new Todo
+            {
+                Id = 1,
+                Text = "Test Todo"
+                // Deadline not set (should be null by default)
+            };
+
+            // Assert
+            Assert.False(todo.Completed); // Default should be false
+            Assert.Null(todo.Deadline); // Default should be null
+            Assert.False(todo.IsOverdue); // Should be false when no deadline
+            Assert.Null(todo.TimeRemaining); // Should be null when no deadline
+            Assert.Equal(5, todo.Priority); // Should be lowest priority when no deadline
+        }
+
+        [Fact]
+        public void Todo_ComputedPropertiesHandleNullDeadlineSafely()
+        {
+            // Arrange
+            var todo = new Todo
+            {
+                Id = 1,
+                Text = "Test Todo",
+                Completed = false,
+                Deadline = null
+            };
+
+            // Act & Assert - Multiple calls should not cause issues
+            for (int i = 0; i < 5; i++)
+            {
+                Assert.False(todo.IsOverdue);
+                Assert.Null(todo.TimeRemaining);
+                Assert.Equal(5, todo.Priority);
+            }
+        }
+
+        [Fact]
+        public void Todo_CompletedWithNullDeadlineHandledCorrectly()
+        {
+            // Arrange
+            var todo = new Todo
+            {
+                Id = 1,
+                Text = "Completed Todo",
+                Completed = true,
+                Deadline = null
+            };
+
+            // Act & Assert
+            Assert.False(todo.IsOverdue); // Completed todos are never overdue
+            Assert.Null(todo.TimeRemaining); // No time remaining when no deadline
+            Assert.Equal(5, todo.Priority); // Completed todos have lowest priority
+        }
     }
 }
