@@ -294,13 +294,15 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ## 📚 Documentation
 
-Comprehensive documentation is available in our [GitHub Wiki](https://github.com/your-username/todo-list-app/wiki), including:
-- [Quick Start Guide](https://github.com/your-username/todo-list-app/wiki/Quick-Start-Guide)
-- [Installation Instructions](https://github.com/your-username/todo-list-app/wiki/Installation)
-- [Usage Guide](https://github.com/your-username/todo-list-app/wiki/Usage)
-- [Development Guide](https://github.com/your-username/todo-list-app/wiki/Development)
-- [Deployment Options](https://github.com/your-username/todo-list-app/wiki/Deployment)
-- [API Documentation](https://github.com/your-username/todo-list-app/wiki/API-Documentation)
+Comprehensive documentation is available in our [GitHub Wiki](https://github.com/luofubo-personal/todo-list-app/wiki), including:
+- [Quick Start Guide](https://github.com/luofubo-personal/todo-list-app/wiki/Quick-Start-Guide)
+- [Installation Instructions](https://github.com/luofubo-personal/todo-list-app/wiki/Installation)
+- [Usage Guide](https://github.com/luofubo-personal/todo-list-app/wiki/Usage)
+- [Development Guide](https://github.com/luofubo-personal/todo-list-app/wiki/Development)
+- [Deployment Options](https://github.com/luofubo-personal/todo-list-app/wiki/Deployment)
+- [API Documentation](https://github.com/luofubo-personal/todo-list-app/wiki/API-Documentation)
+
+Additional documentation files are also available in the [docs](docs) directory of this repository.
 
 ## 📝 Release Notes
 
