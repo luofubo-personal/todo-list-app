@@ -23,7 +23,6 @@ permissions:
   contents: write
   actions: read
   packages: write
-  releases: write
 
 env:
   DOTNET_VERSION: '9.0.x'
