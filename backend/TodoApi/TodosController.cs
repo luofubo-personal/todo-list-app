@@ -26,10 +26,17 @@ namespace TodoApi.Controllers
         {
             try
             {
-                var todos = await _context.Todos
-                    .OrderByDescending(t => t.Timestamp)
-                    .ToListAsync();
-                return Ok(todos);
+                var todos = await _context.Todos.ToListAsync();
+
+                // Sort by priority (deadline-based), then by timestamp for items with same priority
+                var sortedTodos = todos
+                    .OrderBy(t => t.Completed) // Incomplete items first
+                    .ThenBy(t => t.Priority)   // Then by priority (1 = most urgent)
+                    .ThenBy(t => t.Deadline ?? DateTime.MaxValue) // Then by deadline (nulls last)
+                    .ThenByDescending(t => t.Timestamp) // Finally by creation time
+                    .ToList();
+
+                return Ok(sortedTodos);
             }
             catch (Exception ex)
             {

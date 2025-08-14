@@ -1,5 +1,22 @@
-<li class="todo-item" [class.completed]="todo.completed">
+<li class="todo-item" [class.completed]="todo.completed" [class.overdue]="todo.isOverdue" [class.urgent]="isUrgent()">
   <input type="checkbox" class="todo-checkbox" [checked]="todo.completed" (change)="onToggle()">
-  <span class="todo-text">{{ todo.text }}</span>
+
+  <div class="todo-content">
+    <span class="todo-text">{{ todo.text }}</span>
+
+    <div class="todo-meta" *ngIf="todo.deadline">
+      <div class="deadline-info">
+        <span class="deadline-icon">⏰</span>
+        <span class="deadline-text">{{ formatDeadline(todo.deadline) }}</span>
+      </div>
+
+      <div class="countdown" *ngIf="todo.timeRemaining && !todo.completed"
+           [class.overdue]="todo.isOverdue"
+           [class.urgent]="isUrgent()">
+        <span class="countdown-text">{{ todo.timeRemaining }}</span>
+      </div>
+    </div>
+  </div>
+
   <button class="delete-btn" (click)="onDelete()">Delete</button>
 </li>

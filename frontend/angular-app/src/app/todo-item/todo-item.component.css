@@ -1,11 +1,12 @@
 .todo-item {
   display: flex;
-  align-items: center;
-  padding: 15px 0;
+  align-items: flex-start;
+  padding: 15px;
   border-bottom: 1px solid #f0f0f0;
   background-color: #fef7f7; /* Light red background for incomplete items */
   border-left: 4px solid #f44336; /* Red border for accessibility */
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  border-radius: 0 5px 5px 0;
 }
 
 .todo-item:last-child {
@@ -14,6 +15,18 @@
 
 .todo-item:hover {
   background-color: #fef0f0; /* Hover state for incomplete items */
+}
+
+/* Priority-based styling */
+.todo-item.urgent {
+  background-color: #fff3e0; /* Orange background for urgent items */
+  border-left: 4px solid #ff9800; /* Orange border for urgent items */
+}
+
+.todo-item.overdue {
+  background-color: #ffebee; /* Light red background for overdue items */
+  border-left: 4px solid #f44336; /* Red border for overdue items */
+  box-shadow: 0 2px 8px rgba(244, 67, 54, 0.2);
 }
 
 .todo-item.completed {
@@ -35,11 +48,76 @@
   width: 18px;
   height: 18px;
   cursor: pointer;
+  margin-top: 2px;
+}
+
+.todo-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .todo-text {
-  flex: 1;
   font-size: 1.1rem;
+  line-height: 1.4;
+}
+
+.todo-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.deadline-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.deadline-icon {
+  font-size: 0.9rem;
+}
+
+.deadline-text {
+  font-weight: 500;
+}
+
+.countdown {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border: 1px solid #bbdefb;
+}
+
+.countdown.urgent {
+  background-color: #fff3e0;
+  color: #f57c00;
+  border-color: #ffcc02;
+}
+
+.countdown.overdue {
+  background-color: #ffebee;
+  color: #d32f2f;
+  border-color: #ffcdd2;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.countdown-text {
+  font-size: 0.75rem;
 }
 
 .delete-btn {
