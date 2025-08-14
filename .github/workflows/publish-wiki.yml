@@ -1,0 +1,72 @@
+name: Publish Wiki
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'wiki/**'
+  workflow_dispatch:
+
+jobs:
+  publish-wiki:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Clone wiki repository
+        run: |
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git wiki-repo
+        continue-on-error: true
+
+      - name: Initialize wiki repository if it doesn't exist
+        run: |
+          if [ ! -d "wiki-repo" ]; then
+            mkdir wiki-repo
+            cd wiki-repo
+            git init
+            git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git
+          fi
+
+      - name: Copy wiki files
+        run: |
+          cd wiki-repo
+          # Remove existing files
+          rm -f *.md
+          # Copy new files
+          cp ../wiki/* .
+          # Add all files
+          git add .
+
+      - name: Commit and push changes
+        run: |
+          cd wiki-repo
+          if ! git diff-index --quiet HEAD --; then
+            git commit -m "Update wiki documentation
+            
+            Automated update of wiki documentation including:
+            - Home page and navigation
+            - Quick start guide
+            - Installation instructions
+            - Usage documentation
+            - Development guide
+            - Deployment options
+            - Testing documentation
+            - CI/CD workflows
+            - API documentation
+            - Database schema
+            - Environment configuration
+            - Troubleshooting guide
+            - FAQ
+            - Contributing guidelines"
+            git push --set-upstream origin main
+          else
+            echo "No changes to commit. Wiki is up to date."
+          fi
+        continue-on-error: true
