@@ -1,0 +1,41 @@
+name: Create Wiki
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-wiki:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Create wiki repository
+        run: |
+          # Create a temporary directory for the wiki
+          mkdir temp-wiki
+          cd temp-wiki
+          
+          # Initialize git repository
+          git init
+          
+          # Add a basic Home.md file
+          echo "# Welcome to the Todo List App Wiki" > Home.md
+          echo "" >> Home.md
+          echo "This is the wiki for the Todo List App project." >> Home.md
+          
+          # Add and commit the file
+          git add Home.md
+          git commit -m "Initial commit"
+          
+          # Add the remote origin
+          git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git
+          
+          # Push to create the repository
+          git push -u origin main
+        continue-on-error: true
