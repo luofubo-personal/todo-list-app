@@ -3,10 +3,15 @@
   align-items: center;
   padding: 15px 0;
   border-bottom: 1px solid #f0f0f0;
+  background-color: #ffebee; /* Red background for not completed items */
 }
 
 .todo-item:last-child {
   border-bottom: none;
+}
+
+.todo-item.completed {
+  background-color: #e8f5e9; /* Green background for completed items */
 }
 
 .todo-item.completed .todo-text {
