@@ -52,7 +52,9 @@ namespace TodoApi
                             "http://localhost:4200",  // Angular dev server
                             "https://localhost:4200", // Angular dev server HTTPS
                             "http://localhost:3000",  // Alternative dev port
-                            "https://localhost:3000"  // Alternative dev port HTTPS
+                            "https://localhost:3000", // Alternative dev port HTTPS
+                            "http://localhost:61717", // Current Angular dev server port
+                            "https://localhost:61717" // Current Angular dev server port HTTPS
                         };
 
                         // Add production origins from configuration
