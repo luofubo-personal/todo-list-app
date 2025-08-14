@@ -72,4 +72,4 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ---
 **🎉 Built with modern web technologies and enterprise-grade practices**
-*Ready for production deployment with zero technical debt*
+*Ready for production deployment with zero technical debt* 
