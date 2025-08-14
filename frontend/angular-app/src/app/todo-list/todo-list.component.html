@@ -1,7 +1,11 @@
-<form (ngSubmit)="addTodo()" #todoForm="ngForm">
+<form (ngSubmit)="addTodo()" #todoForm="ngForm" class="todo-form">
   <div class="input-group">
-    <input type="text" [(ngModel)]="newTodoText" name="newTodoText" placeholder="Add a new todo..." required>
-    <button type="submit" [disabled]="!todoForm.form.valid">Add</button>
+    <input type="text" [(ngModel)]="newTodoText" name="newTodoText" placeholder="Add a new todo..." required class="todo-input">
+    <input type="datetime-local" [(ngModel)]="newTodoDeadline" name="newTodoDeadline" class="deadline-input" title="Optional deadline">
+    <button type="submit" [disabled]="!todoForm.form.valid" class="add-button">Add</button>
+  </div>
+  <div class="form-hint">
+    <small>💡 Set a deadline to prioritize your todos automatically</small>
   </div>
 </form>
 
