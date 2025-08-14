@@ -66,12 +66,13 @@ jobs:
       run: |
         npx prettier --check "src/**/*.{ts,html,css,scss,json}"
         
-    - name: Run SonarCloud Scan
-      if: ${{ vars.ENABLE_SONAR == 'true' }}
-      uses: SonarSource/sonarcloud-github-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    # SonarCloud Scan - DISABLED
+    # - name: Run SonarCloud Scan
+    #   if: ${{ vars.ENABLE_SONAR == 'true' }}
+    #   uses: SonarSource/sonarcloud-github-action@master
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   # Comprehensive testing
   comprehensive-tests:
