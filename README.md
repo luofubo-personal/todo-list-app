@@ -44,15 +44,15 @@ A modern, production-ready full-stack todo list application built with Angular f
 
 ## 🛠️ Tech Stack
 
-### Frontend (Angular 18+)
-- **Angular 18** with **Standalone Components** - Modern, tree-shakable architecture
-- **TypeScript 5+** - Full type safety with strict mode
+### Frontend (Angular 20+)
+- **Angular 20.1.6** with **Standalone Components** - Latest modern architecture
+- **TypeScript 5.8.3** - Full type safety with strict mode
 - **RxJS** - Reactive programming for HTTP operations
 - **Angular CLI** - Latest development tools and build optimization
 - **ESLint** - Code quality with Angular-specific rules
 
-### Backend (.NET 8)
-- **.NET 8** - Latest LTS cross-platform framework
+### Backend (.NET 9)
+- **.NET 9.0** - Latest cross-platform framework
 - **ASP.NET Core Web API** - High-performance web framework
 - **Entity Framework Core** - Modern ORM with in-memory provider
 - **Health Checks** - Built-in monitoring endpoints
@@ -74,7 +74,7 @@ A modern, production-ready full-stack todo list application built with Angular f
 
 ### Prerequisites
 - **Node.js 18+** and npm
-- **.NET 8 SDK**
+- **.NET 9 SDK**
 - **Docker** (optional, for database)
 
 ### 🚀 Fastest Start (In-Memory Database)
